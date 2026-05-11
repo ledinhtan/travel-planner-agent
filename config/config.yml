@@ -1,0 +1,10 @@
+llm:
+  groq:
+    provider: "groq"
+    model_name: "meta-llama/llama-prompt-guard-2-86m"
+  gemini:
+    provider: "google"
+    model_name: "gemini-3.1-flash-lite-preview"
+  openai:
+    provider: "openai"
+    model_name: "gpt-5-mini-2025-08-07"
