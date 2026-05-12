@@ -36,7 +36,7 @@ if prompt := st.chat_input("Tell me about your ideal trip..."):
     with st.chat_message("assistant"):
         with st.spinner("✈️ Planning your trip..."):
             try:
-                payload = {"question": prompt}
+                payload = {"query": prompt}
                 response = requests.post(f"{BASE_URL}/query", json=payload, timeout=30)
                 
                 if response.status_code == 200:
