@@ -1,5 +1,10 @@
+import sys
 import yaml
 from typing import Dict, Optional
+from exception.exceptionhandling import CustomException
+from logger.logging import logging
+
+logger = logging.getLogger(__name__)
 
 def load_config(config_path: str = "config/config.yml") -> Optional[Dict]:
     """
@@ -19,9 +24,7 @@ def load_config(config_path: str = "config/config.yml") -> Optional[Dict]:
         with open(config_path, "r", encoding="utf-8") as file:
             config = yaml.safe_load(file)
         return config
-    except FileNotFoundError:
-        print(f"❌ Config file not found: {config_path}")
-        raise
-    except yaml.YAMLError as e:
-        print(f"❌ Error parsing YAML: {e}")
-        raise
+    except Exception as e:
+        custom_error = CustomException(e, sys)
+        logger.error(custom_error)
+        raise custom_error  

@@ -1,5 +1,10 @@
+import sys
 import requests
 from typing import Dict, Any, Optional
+from exception.exceptionhandling import CustomException
+from logger.logging import logging
+
+logger = logging.getLogger(__name__)
 
 class WeatherForecastTool:
     """
@@ -23,6 +28,7 @@ class WeatherForecastTool:
             Weather data dict, or None if error
         """
         try:
+            logger.info("Get current weather")
             url = f"{self.base_url}/weather"
             params = {
                 "q": place,
@@ -36,16 +42,11 @@ class WeatherForecastTool:
             else:
                 print(f"Weather API error: {response.status_code}")
                 return None
-                
-        except requests.exceptions.Timeout:
-            print(f"Timeout fetching weather for {place}")
-            return None
-        except requests.exceptions.ConnectionError:
-            print(f"Network error fetching weather for {place}")
-            return None
+            
         except Exception as e:
-            print(f"Unexpected error: {e}")
-            return None
+            custom_error = CustomException(e, sys)
+            logger.error(custom_error)
+            raise custom_error
     
     def get_forecast_weather(self, place: str) -> Optional[Dict[str, Any]]:
         """
@@ -72,13 +73,8 @@ class WeatherForecastTool:
             else:
                 print(f"Forecast API error: {response.status_code}")
                 return None
-                
-        except requests.exceptions.Timeout:
-            print(f"Timeout fetching forecast for {place}")
-            return None
-        except requests.exceptions.ConnectionError:
-            print(f"Network error fetching forecast for {place}")
-            return None
+
         except Exception as e:
-            print(f"Unexpected error: {e}")
-            return None
+            custom_error = CustomException(e, sys)
+            logger.error(custom_error)
+            raise custom_error

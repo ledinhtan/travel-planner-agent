@@ -1,5 +1,10 @@
+import sys
 import requests
 from typing import Optional
+from exception.exceptionhandling import CustomException
+from logger.logging import logging
+
+logger = logging.getLogger(__name__)
 
 class CurrencyConverter:
     """
@@ -42,6 +47,7 @@ class CurrencyConverter:
         url = f"{self.base_url}/{from_currency.upper()}"
         
         try:
+            logger.info("Currency converter starts")
             # Add timeout to avoid hanging
             response = requests.get(url, timeout=30)
             
@@ -61,29 +67,51 @@ class CurrencyConverter:
                 raise ValueError(f"Currency '{to_currency}' not found. Available: {available}...")
             
             return amount * rates[to_currency_upper]
-            
-        except requests.exceptions.Timeout:
-            raise Exception("Currency conversion request timed out. Please try again.")
-        except requests.exceptions.ConnectionError:
-            raise Exception("Network error. Please check your internet connection.")
-        except requests.exceptions.RequestException as e:
-            raise Exception(f"Request failed: {str(e)}")
 
-    def get_supported_currencies(self) -> Optional[list]:
-        """
-        Get list of supported currency codes.
+        except Exception as e:
+            custom_error = CustomException(e, sys)
+            logger.error(custom_error)
+            raise custom_error    
+
+def get_supported_currencies(self) -> Optional[list]:
+    """
+    Get list of supported currency codes from ExchangeRate-API.
+    
+    Returns:
+        List of currency codes (e.g., ['USD', 'EUR', 'VND', ...]) or None if error
+    
+    Example response:
+        {
+            "result": "success",
+            "supported_codes": [
+                ["AED", "UAE Dirham"],
+                ["AFN", "Afghan Afghani"],
+                ...
+            ]
+        }
+    """
+    try:
+        url = f"https://v6.exchangerate-api.com/v6/{self.api_key}/codes"
+
+        logger.info(f"Fetching supported currencies from: {url}")
         
-        Returns:
-            List of currency codes (e.g., ['USD', 'EUR', 'VND', ...]) or None if error
-        """
-        try:
-            # Use USD as base to get all rates
-            url = f"{self.base_url}/USD"
-            response = requests.get(url, timeout=10)
-            
-            if response.status_code == 200:
-                rates = response.json().get("conversion_rates", {})
-                return list(rates.keys())
-            return None
-        except Exception:
-            return None
+        response = requests.get(url, timeout=30)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data.get("result") == "success":
+                # supported_codes is list of [code, name]
+                supported_codes = data.get("supported_codes", [])
+                # Extract only the code (the first element of each pair)
+                currency_codes = [item[0] for item in supported_codes]
+                logger.info(f"Successfully fetched {len(currency_codes)} supported currencies")
+                return currency_codes
+        
+        logger.error(f"Failed to fetch supported currencies: {response.status_code}")
+
+        return None
+        
+    except Exception as e:
+        custom_error = CustomException(e, sys)
+        logger.error(custom_error)
+        raise custom_error

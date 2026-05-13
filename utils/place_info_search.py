@@ -32,7 +32,9 @@ class GooglePlaceSearchTool:
         """
         try:
             result = self.places_tool.run(query)
+
             return result if result else "No results found."
+        
         except Exception as e:
             return f"Search error: {str(e)}"
     
@@ -83,7 +85,6 @@ class GooglePlaceSearchTool:
             str: Available transportation modes (taxi, bus, train, etc.)
         """
         return self._search(f"What are the different modes of transportations available in {place}")
-
 
 class TavilyPlaceSearchTool:
     """
