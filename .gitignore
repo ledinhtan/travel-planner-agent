@@ -11,3 +11,9 @@ wheels/
 
 # API key
 .env
+
+# logs
+logs/
+
+# travel_plans
+travel_plans/
