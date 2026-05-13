@@ -6,7 +6,6 @@ BASE_URL = "http://localhost:8000"
 
 st.set_page_config(
     page_title="✈️ Travel Planner Agentic Application",
-    page_icon="✈️",
     layout="centered",
     initial_sidebar_state="expanded",
 )
@@ -41,12 +40,14 @@ if prompt := st.chat_input("Tell me about your ideal trip..."):
                 
                 if response.status_code == 200:
                     answer = response.json().get("answer", "No answer returned.")
+
+                    answer = answer.replace("$", "\\$")
                     
                     # Format the response nicely
                     markdown_content = f"""
 ### 🌍 Your AI Travel Plan
 **Generated:** {datetime.datetime.now().strftime('%Y-%m-%d at %H:%M')}  
-**Assistant:** Atriyo's Travel Agent
+**Assistant:** Sticky Rice Traveller
 
 ---
 
@@ -54,9 +55,10 @@ if prompt := st.chat_input("Tell me about your ideal trip..."):
 
 ---
 
-> ⚡ *Please verify all information (prices, operating hours, travel requirements) before your trip.*
+> 💡 *Tip: Book early for better prices!*
                     """
                     st.markdown(markdown_content)
+
                     st.session_state.messages.append({"role": "assistant", "content": answer})
                 else:
                     st.error(f"❌ Bot failed to respond: {response.text}")
