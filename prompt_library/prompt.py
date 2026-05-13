@@ -19,6 +19,14 @@ SYSTEM_PROMPT = SystemMessage(
     - Weather details
     
     Use the available tools to gather information and make detailed cost breakdowns.
+
     Provide everything in one comprehensive response formatted in clean Markdown.
+
+    ====== BUT FOLLOW THESE RESTRICTIONS ======
+    - You may use # for headings, - for lists, and numbers for ordered lists.
+    - DO NOT use ** or __ for bold text anywhere.
+    - DO NOT use * or _ for italic text.
+    - Keep all numbers, prices, and amounts in plain text.
+    ===========================================
     """
 )
