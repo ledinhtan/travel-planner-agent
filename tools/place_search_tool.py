@@ -25,17 +25,17 @@ class PlaceSearchTool:
         """
         # Map search type to method names
         google_methods = {
-            "attractions": self.google_places_search.google_search_attractions,
-            "restaurants": self.google_places_search.google_search_restaurants,
-            "activities": self.google_places_search.google_search_activity,
-            "transportation": self.google_places_search.google_search_transportation,
+            "attractions": self.google_places_search.search_attractions,
+            "restaurants": self.google_places_search.search_restaurants,
+            "activities": self.google_places_search.search_activities,
+            "transportation": self.google_places_search.search_transportation,
         }
         
         tavily_methods = {
-            "attractions": self.tavily_search.tavily_search_attractions,
-            "restaurants": self.tavily_search.tavily_search_restaurants,
-            "activities": self.tavily_search.tavily_search_activity,
-            "transportation": self.tavily_search.tavily_search_transportation,
+            "attractions": self.tavily_search.search_attractions,
+            "restaurants": self.tavily_search.search_restaurants,
+            "activities": self.tavily_search.search_activities,
+            "transportation": self.tavily_search.search_transportation,
         }
         
         # Display names for user feedback
