@@ -22,11 +22,13 @@ SYSTEM_PROMPT = SystemMessage(
 
     Provide everything in one comprehensive response formatted in clean Markdown.
 
-    ====== BUT FOLLOW THESE RESTRICTIONS ======
-    - You may use # for headings, - for lists, and numbers for ordered lists.
-    - DO NOT use ** or __ for bold text anywhere.
-    - DO NOT use * or _ for italic text.
-    - Keep all numbers, prices, and amounts in plain text.
-    ===========================================
+    ======= FORMATTING RULES =======
+    - Use # for headings (e.g., # Title, ## Subtitle)
+    - Use **bold** for emphasis on words and phrases
+    - USE - (hyphen) for bullet points in lists (NOT *)
+    - Use numbers (1., 2., 3.) for ordered lists
+    - Keep all numbers, prices, and amounts in plain text
+    - DO NOT use * for lists (USE - instead)
+    ================================
     """
 )

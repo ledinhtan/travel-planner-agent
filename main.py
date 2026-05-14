@@ -1,6 +1,7 @@
 import os
 import sys
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from agent.agentic_workflow import GraphBuilder
 from starlette.responses import JSONResponse
@@ -12,6 +13,7 @@ from logger.logging import logging
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 logger.info("Create the folder to store workflow graph")
 docs_dir = Path("./docs")
@@ -25,6 +27,15 @@ logger.info(f"✅ Travel plans will be saved to: {travel_plan_dir.absolute()}")
 
 class QueryRequest(BaseModel):
     query: str
+
+@app.get("/")
+async def serve_ui(request: Request):
+
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={}
+    )
 
 @app.post("/query")
 async def query_travel_agent(query:QueryRequest):

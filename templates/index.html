@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✈️ Travel Planner Agentic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            max-width: 900px;
+            width: 100%;
+            height: 90vh;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: white;
+            padding: 20px 28px;
+            border-bottom: 1px solid #e9ecef;
+            text-align: center;
+        }
+
+        .chat-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .chat-header p {
+            color: #6c757d;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #ffffff;
+        }
+
+        .message {
+            display: flex;
+            max-width: 80%;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+            align-self: flex-end;
+        }
+
+        .message.assistant {
+            justify-content: flex-start;
+            align-self: flex-start;
+        }
+
+        .message-content {
+            padding: 10px 16px;
+            border-radius: 18px;
+            line-height: 1.5;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        .message.user .message-content {
+            background: #e7f1ff;
+            color: #1a56db;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message.assistant .message-content {
+            background: #f2f4f6;
+            color: #1e293b;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.assistant .message-content h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 16px 0 12px;
+            color: #0f172a;
+        }
+        .message.assistant .message-content h1:first-child {
+            margin-top: 0;
+        }
+        .message.assistant .message-content h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 14px 0 10px;
+            color: #1e293b;
+        }
+        .message.assistant .message-content h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 12px 0 8px;
+            color: #334155;
+        }
+        .message.assistant .message-content ul, 
+        .message.assistant .message-content ol {
+            margin: 8px 0;
+            padding-left: 24px;
+        }
+        .message.assistant .message-content li {
+            margin: 4px 0;
+        }
+        .message.assistant .message-content strong {
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .message.assistant .message-content hr {
+            margin: 16px 0;
+            border: none;
+            border-top: 1px solid #e2e8f0;
+        }
+        .message.assistant .message-content code {
+            background: #e2e8f0;
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 10px 16px;
+            background: #f2f4f6;
+            border-radius: 18px;
+            width: fit-content;
+            border-bottom-left-radius: 4px;
+        }
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: #94a3b8;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .input-area {
+            padding: 16px 28px;
+            border-top: 1px solid #e9ecef;
+            background: white;
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 24px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .input-area input:focus {
+            border-color: #1a56db;
+            box-shadow: 0 0 0 2px rgba(26, 86, 219, 0.1);
+        }
+
+        .input-area input::placeholder {
+            color: #adb5bd;
+        }
+
+        .input-area button {
+            padding: 12px 28px;
+            background: #1a56db;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .input-area button:hover {
+            background: #1e40af;
+        }
+
+        .input-area button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .messages-area::-webkit-scrollbar {
+            width: 6px;
+        }
+        .messages-area::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        .messages-area::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>✈️ Travel Planner Agentic</h1>
+            <p>👋 Hi there! I'm your personal travel assistant.</p>
+            <p>Tell me where you'd like to go, and I'll help you plan the perfect trip ✨</p>
+        </div>
+
+        <div class="messages-area" id="messagesArea">
+            <div class="message assistant">
+                <div class="message-content">
+                    🗺️ Dreaming of somewhere? Let's plan it together!
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Tell me about your ideal trip..." autofocus>
+            <button id="sendBtn">Send ✈️</button>
+        </div>
+    </div>
+
+    <script>
+        const messagesArea = document.getElementById('messagesArea');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const BASE_URL = window.location.origin;
+
+        function markdownToHtml(text) {
+            let html = text;
+            
+            // Xử lý đặc biệt cho dấu $ và số tiền
+            // Tìm các pattern như $100, $50, $1,050 và giữ nguyên
+            html = html.replace(/\$(\d{1,3}(?:,\d{3})*|\d+)/g, '<span class="currency">$$$1</span>');
+            
+            // Headers
+            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+            
+            // Bold
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Italic
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            // Inline code
+            html = html.replace(/`(.*?)`/g, '<code>$1</code>');
+            
+            // Horizontal line
+            html = html.replace(/^---$/gm, '<hr>');
+            
+            // Line breaks
+            html = html.replace(/\n/g, '<br>');
+            
+            return html;
+        }
+
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'assistant'}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            if (isUser) {
+                contentDiv.textContent = content;
+            } else {
+                contentDiv.innerHTML = markdownToHtml(content);
+            }
+            
+            messageDiv.appendChild(contentDiv);
+            messagesArea.appendChild(messageDiv);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message assistant';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="typing-indicator">
+                    <span></span><span></span><span></span>
+                </div>
+            `;
+            messagesArea.appendChild(typingDiv);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        function hideTyping() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) indicator.remove();
+        }
+
+        async function sendMessage() {
+            const query = userInput.value.trim();
+            if (!query) return;
+
+            userInput.value = '';
+            userInput.focus();
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+
+            addMessage(query, true);
+            showTyping();
+
+            try {
+                const response = await fetch(`${BASE_URL}/query`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: query })
+                });
+
+                hideTyping();
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const answer = data.answer || 'No answer returned.';
+                    addMessage(answer, false);
+                } else {
+                    addMessage(`❌ Error: ${response.status} - ${response.statusText}`, false);
+                }
+            } catch (error) {
+                hideTyping();
+                addMessage(`❌ Network error: ${error.message}`, false);
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send ✈️';
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+        
+        userInput.focus();
+    </script>
+</body>
+</html>
